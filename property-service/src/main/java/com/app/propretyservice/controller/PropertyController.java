@@ -3,6 +3,7 @@ package com.app.propretyservice.controller;
 import com.app.propretyservice.entity.Property;
 import com.app.propretyservice.service.PropertyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,11 +31,13 @@ public class PropertyController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Property createProperty(@RequestBody Property property) {
         return propertyService.createProperty(property);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Property> updateProperty(@PathVariable Long id, @RequestBody Property propertyDetails) {
         try {
             Property updatedProperty = propertyService.updateProperty(id, propertyDetails);
@@ -45,6 +48,7 @@ public class PropertyController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
         propertyService.deleteProperty(id);
         return ResponseEntity.noContent().build();
