@@ -74,10 +74,6 @@ public class BookingService {
         }).orElseThrow(() -> new RuntimeException("Booking not found with id " + id));
     }
 
-    public void deleteBooking(Long id) {
-        bookingRepository.deleteById(id);
-    }
-
     public List<Booking> getBookingsByUser(String userId) {
         return bookingRepository.findByUserId(userId);
     }

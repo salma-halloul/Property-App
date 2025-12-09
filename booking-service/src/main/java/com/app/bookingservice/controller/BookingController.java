@@ -54,14 +54,9 @@ public class BookingController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
-        bookingService.deleteBooking(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/user/{userId}")
-    public List<Booking> getBookingsByUser(@PathVariable String userId) {
+    @GetMapping("/user")
+    public List<Booking> getBookingsByUser(@AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
         return bookingService.getBookingsByUser(userId);
     }
 }
