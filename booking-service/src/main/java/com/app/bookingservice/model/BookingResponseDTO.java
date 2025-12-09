@@ -18,15 +18,7 @@ public class BookingResponseDTO {
     private Long propertyId;
     private String userId;
     private LocalDateTime bookingDate;
+    private LocalDateTime userDefinedDate;
     private String status;
 
-    public static BookingResponseDTO fromEntity(Booking booking) {
-        BookingResponseDTO dto = new BookingResponseDTO();
-        dto.setId(booking.getId());
-        dto.setPropertyId(booking.getPropertyId());
-        dto.setUserId(booking.getUserId());
-        dto.setBookingDate(booking.getBookingDate());
-        dto.setStatus(booking.getStatus());
-        return dto;
-    }
 }

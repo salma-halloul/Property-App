@@ -54,4 +54,10 @@ public class PropertyController {
     public List<Property> getAvailableProperties() {
         return propertyService.getAvailableProperties();
     }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> checkPropertyExists(@PathVariable Long id) {
+        boolean exists = propertyService.getPropertyById(id).isPresent();
+        return ResponseEntity.ok(exists);
+    }
 }

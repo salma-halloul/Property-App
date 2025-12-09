@@ -6,6 +6,7 @@ import com.app.bookingservice.model.BookingResponseDTO;
 import com.app.bookingservice.repository.BookingRepository;
 import org.springframework.stereotype.Service;
 import com.app.bookingservice.client.PropertyClient;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +23,14 @@ public class BookingService {
         this.propertyClient = propertyClient;
     }
 
-    public BookingResponseDTO createBooking(BookingRequestDTO request, String userId) {
+    public ResponseEntity<BookingResponseDTO> createBooking(BookingRequestDTO request, String userId) {
 
         // 1. Vérifier que la propriété existe via le property-service
         boolean propertyExists = propertyClient.checkPropertyExists(request.getPropertyId());
 
         if (!propertyExists) {
-            throw new RuntimeException("Property with ID " + request.getPropertyId() + " does not exist.");
+            return ResponseEntity.status(404)
+                    .body(null); // Retourner une réponse 404 si la propriété n'existe pas
         }
 
         // 2. Convertir DTO → Entity
@@ -47,10 +49,11 @@ public class BookingService {
         response.setId(saved.getId());
         response.setPropertyId(saved.getPropertyId());
         response.setBookingDate(saved.getBookingDate());
+        response.setUserDefinedDate(saved.getUserDefinedDate());
         response.setStatus(saved.getStatus());
         response.setUserId(saved.getUserId());
 
-        return response;
+        return ResponseEntity.ok(response);
     }
 
 

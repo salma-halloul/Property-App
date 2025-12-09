@@ -40,9 +40,8 @@ public class BookingController {
 
         String userId = jwt.getSubject();
 
-        BookingResponseDTO booking = bookingService.createBooking(bookingRequest, userId);
-
-        return ResponseEntity.ok(booking);
+        // Appeler le service et retourner directement la réponse
+        return bookingService.createBooking(bookingRequest, userId);
     }
 
     @PutMapping("/{id}")
