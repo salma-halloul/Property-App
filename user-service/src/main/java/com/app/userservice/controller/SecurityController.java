@@ -1,15 +1,14 @@
 package com.app.userservice.controller;
+import com.app.userservice.entities.AppUser;
 import com.app.userservice.model.AuthRequest;
+import com.app.userservice.repositories.AppUserRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -30,6 +29,7 @@ public class SecurityController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
+    private final AppUserRepository appUserRepository;
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody AuthRequest authRequest) {
@@ -68,25 +68,26 @@ public class SecurityController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Map<String, Object>> profile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null ||
-                !authentication.isAuthenticated() ||
-                authentication instanceof AnonymousAuthenticationToken) {
+    public ResponseEntity<Map<String, Object>> profile(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Unauthorized"));
         }
 
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserDetails userDetails)) {
-            return ResponseEntity.status(401)
-                    .body(Map.of("error", "Unauthorized"));
+        // Récupérer l'utilisateur depuis la base de données
+        String username = authentication.getName();
+        AppUser user = appUserRepository.findByUsername(username);
+        
+        if (user == null) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "User not found"));
         }
 
         Map<String, Object> profile = new HashMap<>();
-        profile.put("username", userDetails.getUsername());
-        profile.put("roles", userDetails.getAuthorities()
+        profile.put("id", user.getId());
+        profile.put("username", user.getUsername());
+        profile.put("email", user.getEmail());
+        profile.put("roles", authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList());
