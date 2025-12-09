@@ -55,7 +55,7 @@ public class SecurityController {
             Instant instant = Instant.now();
             JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                     .issuedAt(instant)
-                    .expiresAt(instant.plus(10, ChronoUnit.MINUTES))
+                    .expiresAt(instant.plus(30, ChronoUnit.MINUTES))
                     .subject(user.getId().toString())  // Mettre l'ID au lieu du username
                     .claim("scope", scope)
                     .build();

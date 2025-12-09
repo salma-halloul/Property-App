@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.app.bookingservice.enums.BookingStatus;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,5 +29,5 @@ public class Booking {
     
     private LocalDateTime userDefinedDate;
 
-    private String status;
+    private BookingStatus status;
 }

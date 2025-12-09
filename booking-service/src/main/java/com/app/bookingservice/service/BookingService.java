@@ -1,6 +1,7 @@
 package com.app.bookingservice.service;
 
 import com.app.bookingservice.entity.Booking;
+import com.app.bookingservice.enums.BookingStatus;
 import com.app.bookingservice.model.BookingRequestDTO;
 import com.app.bookingservice.model.BookingResponseDTO;
 import com.app.bookingservice.repository.BookingRepository;
@@ -38,7 +39,7 @@ public class BookingService {
         booking.setPropertyId(request.getPropertyId());
         booking.setUserDefinedDate(request.getUserDefinedDate());
         booking.setBookingDate(java.time.LocalDateTime.now());
-        booking.setStatus("PENDING");
+        booking.setStatus(BookingStatus.PENDING);
         booking.setUserId(userId);  // Le userId injecté depuis JWT
 
         // 3. Sauvegarder dans la DB
@@ -67,9 +68,7 @@ public class BookingService {
 
     public Booking updateBooking(Long id, Booking bookingDetails) {
         return bookingRepository.findById(id).map(booking -> {
-            booking.setPropertyId(bookingDetails.getPropertyId());
-            booking.setUserId(bookingDetails.getUserId());
-            booking.setBookingDate(bookingDetails.getBookingDate());
+            // Mettre à jour uniquement le statut
             booking.setStatus(bookingDetails.getStatus());
             return bookingRepository.save(booking);
         }).orElseThrow(() -> new RuntimeException("Booking not found with id " + id));

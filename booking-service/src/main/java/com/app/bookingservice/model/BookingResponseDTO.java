@@ -1,6 +1,6 @@
 package com.app.bookingservice.model;
 
-import com.app.bookingservice.entity.Booking;
+import com.app.bookingservice.enums.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +19,5 @@ public class BookingResponseDTO {
     private String userId;
     private LocalDateTime bookingDate;
     private LocalDateTime userDefinedDate;
-    private String status;
-
+    private BookingStatus status;
 }
