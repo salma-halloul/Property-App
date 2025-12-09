@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -22,11 +23,13 @@ public class BookingController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Booking> getAllBookings() {
         return bookingService.getAllBookings();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
         return bookingService.getBookingById(id)
                 .map(ResponseEntity::ok)
@@ -34,6 +37,7 @@ public class BookingController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookingResponseDTO> createBooking(
             @RequestBody BookingRequestDTO bookingRequest,
             @AuthenticationPrincipal Jwt jwt) {
@@ -45,6 +49,7 @@ public class BookingController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Booking> updateBooking(@PathVariable Long id, @RequestBody Booking bookingDetails) {
         try {
             Booking updatedBooking = bookingService.updateBooking(id, bookingDetails);
@@ -55,6 +60,7 @@ public class BookingController {
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
     public List<Booking> getBookingsByUser(@AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getSubject();
         return bookingService.getBookingsByUser(userId);
