@@ -10,6 +10,7 @@
         <module name="config-server" />
         <module name="gateway-service" />
         <module name="discovery-service" />
+        <module name="notification-service" />
       </profile>
       <profile name="Annotation profile for booking-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -19,16 +20,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
-        <module name="booking-service" />
-      </profile>
-      <profile name="Annotation profile for proprety-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-        </processorPath>
         <module name="property-service" />
+        <module name="booking-service" />
         <module name="user-service" />
       </profile>
     </annotationProcessing>
@@ -46,6 +39,7 @@
       <module name="discovery-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
       <module name="medecin-service" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="property-service" options="-parameters" />
       <module name="rdv-service" options="-parameters" />
       <module name="user-service" options="-parameters" />

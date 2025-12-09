@@ -2,6 +2,7 @@ package com.app.bookingservice.service;
 
 import com.app.bookingservice.entity.Booking;
 import com.app.bookingservice.enums.BookingStatus;
+import com.app.bookingservice.event.BookingCreatedEvent;
 import com.app.bookingservice.model.BookingRequestDTO;
 import com.app.bookingservice.model.BookingResponseDTO;
 import com.app.bookingservice.repository.BookingRepository;
@@ -18,10 +19,12 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final PropertyClient propertyClient;
+    private final BookingEventPublisher eventPublisher;
 
-    public BookingService(BookingRepository bookingRepository, PropertyClient propertyClient) {
+    public BookingService(BookingRepository bookingRepository, PropertyClient propertyClient, BookingEventPublisher eventPublisher) {
         this.bookingRepository = bookingRepository;
         this.propertyClient = propertyClient;
+        this.eventPublisher = eventPublisher;
     }
 
     public ResponseEntity<BookingResponseDTO> createBooking(BookingRequestDTO request, String userId) {
@@ -45,7 +48,18 @@ public class BookingService {
         // 3. Sauvegarder dans la DB
         Booking saved = bookingRepository.save(booking);
 
-        // 4. Convertir Entity → ResponseDTO
+        // 4. Publier l'événement Kafka
+        BookingCreatedEvent event = new BookingCreatedEvent();
+        event.setBookingId(saved.getId());
+        event.setPropertyId(saved.getPropertyId());
+        event.setUserId(saved.getUserId());
+        event.setBookingDate(saved.getBookingDate());
+        event.setUserDefinedDate(saved.getUserDefinedDate());
+        event.setStatus(saved.getStatus());
+        
+        eventPublisher.publishBookingCreatedEvent(event);
+
+        // 5. Convertir Entity → ResponseDTO
         BookingResponseDTO response = new BookingResponseDTO();
         response.setId(saved.getId());
         response.setPropertyId(saved.getPropertyId());
