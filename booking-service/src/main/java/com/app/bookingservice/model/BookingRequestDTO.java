@@ -13,6 +13,6 @@ import java.time.LocalDateTime;
 public class BookingRequestDTO {
 
     private Long propertyId;
-    private LocalDateTime bookingDate;
+    private LocalDateTime userDefinedDate;
 }
 

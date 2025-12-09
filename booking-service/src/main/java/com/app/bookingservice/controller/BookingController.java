@@ -38,7 +38,7 @@ public class BookingController {
             @RequestBody BookingRequestDTO bookingRequest,
             @AuthenticationPrincipal Jwt jwt) {
 
-        String userId = jwt.getSubject(); // sub = ID user dans Keycloak
+        String userId = jwt.getSubject();
 
         BookingResponseDTO booking = bookingService.createBooking(bookingRequest, userId);
 

@@ -41,6 +41,12 @@ public class SecurityController {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
+            // Récupérer l'utilisateur depuis la base de données pour obtenir son ID
+            AppUser user = appUserRepository.findByUsername(username);
+            if (user == null) {
+                return Map.of("error", "User not found");
+            }
+
             String scope = authentication.getAuthorities()
                     .stream()
                     .map(a -> a.getAuthority())
@@ -50,7 +56,7 @@ public class SecurityController {
             JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                     .issuedAt(instant)
                     .expiresAt(instant.plus(10, ChronoUnit.MINUTES))
-                    .subject(username)
+                    .subject(user.getId().toString())  // Mettre l'ID au lieu du username
                     .claim("scope", scope)
                     .build();
 
@@ -74,9 +80,9 @@ public class SecurityController {
                     .body(Map.of("error", "Unauthorized"));
         }
 
-        // Récupérer l'utilisateur depuis la base de données
-        String username = authentication.getName();
-        AppUser user = appUserRepository.findByUsername(username);
+        // Récupérer l'ID depuis le token (subject contient maintenant l'ID)
+        String userId = authentication.getName();
+        AppUser user = appUserRepository.findById(Long.parseLong(userId)).orElse(null);
         
         if (user == null) {
             return ResponseEntity.status(404)

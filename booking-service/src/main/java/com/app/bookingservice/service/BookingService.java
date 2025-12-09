@@ -34,7 +34,8 @@ public class BookingService {
         // 2. Convertir DTO → Entity
         Booking booking = new Booking();
         booking.setPropertyId(request.getPropertyId());
-        booking.setBookingDate(request.getBookingDate());
+        booking.setUserDefinedDate(request.getUserDefinedDate());
+        booking.setBookingDate(java.time.LocalDateTime.now());
         booking.setStatus("PENDING");
         booking.setUserId(userId);  // Le userId injecté depuis JWT
 

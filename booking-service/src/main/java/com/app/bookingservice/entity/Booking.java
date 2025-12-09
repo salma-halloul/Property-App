@@ -25,6 +25,8 @@ public class Booking {
     private String userId;
 
     private LocalDateTime bookingDate;
+    
+    private LocalDateTime userDefinedDate;
 
     private String status;
 }
