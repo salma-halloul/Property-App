@@ -1,0 +1,9 @@
+package com.app.userservice.repositories;
+
+import com.app.userservice.entities.AppUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+
+    AppUser findByUsername(String username);
+}
